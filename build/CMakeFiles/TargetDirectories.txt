@@ -1,0 +1,4 @@
+D:/tianxiaolong/C++/HttpTemplate/build/CMakeFiles/client.dir
+D:/tianxiaolong/C++/HttpTemplate/build/CMakeFiles/server.dir
+D:/tianxiaolong/C++/HttpTemplate/build/CMakeFiles/edit_cache.dir
+D:/tianxiaolong/C++/HttpTemplate/build/CMakeFiles/rebuild_cache.dir
