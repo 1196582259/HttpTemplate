@@ -1,4 +1,4 @@
-# Install script for directory: D:/tianxiaolong/C++/HttpTemplate
+# Install script for directory: E:/Desktop/Cmake/HttpTemplate
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "D:/tianxiaolong/ENV/mingw64/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "D:/C/mingw64/bin/objdump.exe")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/tianxiaolong/C++/HttpTemplate/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "E:/Desktop/Cmake/HttpTemplate/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
