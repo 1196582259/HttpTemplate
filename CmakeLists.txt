@@ -5,15 +5,26 @@ cmake_minimum_required (VERSION 3.5)
 # 项目信息
 project (HttpTemplate)
 
-
-
+set(MYSQL_DIR "E:/Program Files/MySQL/MySQL Server 5.7")
+include_directories("${MYSQL_DIR}/include")
 include_directories(inc)
+
+link_directories("${MYSQL_DIR}/lib")
 
 
 # 指定生成目标
 add_executable(client client.cpp)
 add_executable(server server.cpp)
-target_link_libraries(client Ws2_32)
-target_link_libraries(server Ws2_32)
+add_executable(main main.cpp src/socket_server.cpp)
+
 
 target_include_directories(server PRIVATE inc)
+target_include_directories(main PRIVATE inc)
+target_include_directories(main PRIVATE "${MYSQL_DIR}/include")
+
+target_link_directories(main PRIVATE "${MYSQL_DIR}/lib")
+
+target_link_libraries(client Ws2_32)
+target_link_libraries(server Ws2_32)
+target_link_libraries(main Ws2_32)
+target_link_libraries(main "${MYSQL_DIR}/lib/libmysql.lib")

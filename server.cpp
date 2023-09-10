@@ -7,7 +7,7 @@
 using namespace std;
 
 #define ECHO_DEF_PORT 8082
-#define ECHO_BUF_SIZE 256
+#define ECHO_BUF_SIZE 1024
 
 char response[] = "HTTP/1.1 200 OK\r\n"
                   "Access-Control-Allow-Origin: *\r\n"
@@ -25,18 +25,6 @@ char response[] = "HTTP/1.1 200 OK\r\n"
                   " working. </p>"
                   "<p><em>Thank you for using JJWebserver</em></p>"
                   "</body></html>\r\n";
-
-stringstream generateHTTPResponse(string body)
-{
-    stringstream response;
-    response << "HTTP/1.1 200 OK\r\n";
-    response << "Content-Type: text/html\r\n";
-    response << "Content-Length: " << body.length() << "\r\n";
-    response << "Access-Control-Allow-Origin: *";
-    response << "\r\n";
-    response << body;
-    return response;
-}
 
 int main(int argc, char **argv)
 {
@@ -86,7 +74,7 @@ int main(int argc, char **argv)
             cout<< " user" << endl;
         }
         printf("[Server] receives: \"%s\", from %s\r\n", recv_buf, inet_ntoa(clnt_addr.sin_addr));
-        result = send(acpt_fd, response, sizeof(response) - 1, 0);
+        result = send(acpt_fd, response, sizeof(response) , 0);
         closesocket(acpt_fd);
     }
     closesocket(server_fd);
