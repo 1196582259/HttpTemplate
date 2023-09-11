@@ -43,17 +43,21 @@ bool DataBase::connect(const char *ip, const char *name, const char *cypher, con
     if (true == _state)
     {
         cout << "DataBase is connected !" << endl;
-        ;
         return false;
     }
+    mysql_init(_mysql);
     // 返回false则连接失败，返回true则连接成功
-    if (!(mysql_real_connect(_mysql, ip, name, cypher, database_name, port, NULL, 0))) // 中间分别是主机，用户名，密码，数据库名，端口号（可以写默认0或者3306等），可以先写成参数再传进去
+    if ((mysql_real_connect(_mysql, ip, name, cypher, database_name, port, NULL, 0)) == NULL) // 中间分别是主机，用户名，密码，数据库名，端口号（可以写默认0或者3306等），可以先写成参数再传进去
     {
+        system("pause");
+        cout << "hhh" << endl;
         printf("Error connecting to database:%s\n", mysql_error(_mysql));
         return false;
     }
     else
     {
+        system("pause");
+
         _state = true;
         printf("Connected succeed\n\n");
         return true;
