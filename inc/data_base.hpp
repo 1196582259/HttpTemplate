@@ -3,6 +3,7 @@
 #include <WinSock2.h>
 #include <mysql.h>
 #pragma once
+#pragma commet(lib, "libmysql.lib")
 using namespace std;
 
 class DataBase
