@@ -28,6 +28,11 @@ void p_thread_test()
     pthread_exit(NULL);
 }
 
+
+/**
+ * @class PThreadPool
+ * @details 单例模式
+*/
 class PThreadPool
 {
 private:
@@ -36,18 +41,26 @@ private:
     int _maxThreadNum;
     pthread_t *tids;
 
-public:
-    static PThreadPool *get_instance();
+    PThreadPool();
 
-    PThreadPool() = delete;
+public:
+    static PThreadPool *get_instance()
+    {
+        if (_instance == nullptr)
+        {
+            _instance = new PThreadPool();
+        }
+        return _instance;
+    };
+
     ~PThreadPool();
     bool create_thread();
-}
-static PThreadPool::PThreadPool *get_instance()
-{
-    if (_instance == nullptr)
-    {
-        _instance = new PThreadPool();
-    }
-    return _instance;
-}
+};
+PThreadPool::PThreadPool(){
+    _threadNum = 0;
+    _maxThreadNum = 10; 
+};
+PThreadPool::~PThreadPool(){
+
+};
+PThreadPool PThreadPool::*_instance = nullptr;
