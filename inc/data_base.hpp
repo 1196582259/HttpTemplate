@@ -2,9 +2,26 @@
 #include <Windows.h>
 #include <WinSock2.h>
 #include <mysql.h>
+#include <map>
+#include <vector>
+#include <typeinfo>
 #pragma once
 #pragma commet(lib, "libmysql.lib")
 using namespace std;
+
+struct test
+{
+    int id;
+    map<string, string>* data;
+};
+
+struct test_user : test
+{
+    char *name;
+    int age;
+    int status;
+    char *gender;
+};
 
 class DataBase
 {
@@ -25,11 +42,12 @@ public:
     int get_table_field(const char *table_name);
     // 查询表 参数为表名
     bool query(const char *table_name);
+    bool query(const char *table_name, struct test *table_data);
     // 自由执行指令
     bool implement(const char *sentence);
 };
 
-DataBase::DataBase()
+inline DataBase::DataBase()
 {
     _state = false;
     _mysql = new MYSQL;
@@ -39,7 +57,7 @@ DataBase::DataBase()
     _column = nullptr;
     // memset(_query, NULL, sizeof(_query));
 }
-bool DataBase::connect(const char *ip, const char *name, const char *cypher, const char *database_name, const int port)
+inline bool DataBase::connect(const char *ip, const char *name, const char *cypher, const char *database_name, const int port)
 {
     if (true == _state)
     {
@@ -50,14 +68,11 @@ bool DataBase::connect(const char *ip, const char *name, const char *cypher, con
     // 返回false则连接失败，返回true则连接成功
     if ((mysql_real_connect(_mysql, ip, name, cypher, database_name, port, NULL, 0)) == NULL) // 中间分别是主机，用户名，密码，数据库名，端口号（可以写默认0或者3306等），可以先写成参数再传进去
     {
-        system("pause");
-        cout << "hhh" << endl;
         printf("Error connecting to database:%s\n", mysql_error(_mysql));
         return false;
     }
     else
     {
-        system("pause");
 
         _state = true;
         printf("Connected succeed\n\n");
@@ -65,7 +80,8 @@ bool DataBase::connect(const char *ip, const char *name, const char *cypher, con
     }
     return true;
 }
-int DataBase::get_table_field(const char *table_name)
+
+inline int DataBase::get_table_field(const char *table_name)
 {
     if (false == _state)
     {
@@ -92,7 +108,7 @@ int DataBase::get_table_field(const char *table_name)
     return mysql_affected_rows(_mysql);
 }
 
-bool DataBase::query(const char *table_name)
+inline bool DataBase::query(const char *table_name)
 {
     if (false == _state)
     {
@@ -146,7 +162,55 @@ bool DataBase::query(const char *table_name)
     return true;
 }
 
-bool DataBase::implement(const char *sentence)
+inline bool DataBase::query(const char *table_name, struct test *table_data)
+{
+    if (false == _state)
+    {
+        printf("Database not connected\n");
+        return false;
+    }
+    int field_num = get_table_field(table_name);
+    sprintf_s(_query, "select * from %s", table_name); // 拼接查询语句
+    // 设置编码格式（SET NAMES GBK也行），否则cmd下中文乱码
+    mysql_query(_mysql, "set names gbk");
+    if (mysql_query(_mysql, _query)) // 执行SQL语句
+    {
+        printf("Query failed (%s)\n", mysql_error(_mysql));
+        return false;
+    }
+    // 获取结果集
+    if (!(_res = mysql_store_result(_mysql))) // 获得sql语句结束后返回的结果集
+    {
+        printf("Couldn't get result from %s\n", mysql_error(_mysql));
+        return false;
+    }
+    // 打印数据行数
+    printf("number of dataline returned: %lld\n", mysql_affected_rows(_mysql));
+    char *str_field[32];
+    for (int i = 0; i < field_num; i++) // 在已知字段数量的情况下获取字段名
+    {
+        str_field[i] = mysql_fetch_field(_res)->name;
+        cout << str_field[i] << endl;
+    }
+    table_data->data = new map<string, string>();
+    // 打印获取的数据
+    while (_column = mysql_fetch_row(_res)) // 在已知字段数量情况下，获取并打印下一行
+    {
+        for (int i = 0; i < field_num; i++)
+        {
+            // table_data->data[string(str_field[i])] = string(_column[i]);
+            table_data->data->insert(pair<string, string>("1223", "12321"));
+            cout << "```````````````````" << endl;
+            printf("%10s\t", _column[i]); // column是列数组
+        }
+        printf("\n");
+    }
+
+    table_data->id = 2;
+    return true;
+}
+
+inline bool DataBase::implement(const char *sentence)
 {
     if (false == _state)
     {

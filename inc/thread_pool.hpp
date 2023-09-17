@@ -28,18 +28,16 @@ void p_thread_test()
     pthread_exit(NULL);
 }
 
-
 /**
  * @class PThreadPool
  * @details 单例模式
-*/
+ */
 class PThreadPool
 {
 private:
     static PThreadPool *_instance;
     int _threadNum;
     int _maxThreadNum;
-    pthread_t *tids;
 
     PThreadPool();
 
@@ -54,13 +52,39 @@ public:
     };
 
     ~PThreadPool();
-    bool create_thread();
+    void create_thread();
+    bool create_thread(void *(*func)(void *));
 };
-PThreadPool::PThreadPool(){
+PThreadPool::PThreadPool()
+{
     _threadNum = 0;
-    _maxThreadNum = 10; 
+    _maxThreadNum = 10;
 };
 PThreadPool::~PThreadPool(){
 
 };
-PThreadPool PThreadPool::*_instance = nullptr;
+PThreadPool *PThreadPool::_instance = nullptr;
+
+void PThreadPool::create_thread()
+{
+    pthread_t tids[_maxThreadNum];
+    while (_threadNum < _maxThreadNum)
+    {
+        cout << _threadNum << endl;
+        pthread_create(&tids[_threadNum], NULL, say_hello, NULL);
+        _threadNum++;
+    }
+    pthread_exit(NULL);
+};
+
+bool PThreadPool::create_thread(void *(*func)(void *))
+{
+    pthread_t tid;
+    int ret = pthread_create(&tid, NULL, func, NULL);
+    if (ret != 0)
+    {
+        cout << "pthread_create error: error_code = " << ret << endl;
+    }
+    pthread_join(tid, NULL);
+    return ret == 0;
+}

@@ -1,13 +1,18 @@
 
 #include "socket_server.h"
 #include "thread_pool.hpp"
-#include "data_base.hpp"
+// #include "data_base.hpp"
 using namespace std;
+int i = 8082;
+void *test2(void *)
+{
+    HttpServer(i++);
+    return nullptr;
+}
 
 int main()
 {
-    system("pause");
-    p_thread_test();
+    HttpServer hs(8082);
 
     return 1;
 }
