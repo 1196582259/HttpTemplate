@@ -23,7 +23,6 @@ HttpServer::HttpServer(unsigned short sv_port) : fd(add_total())
     db = new DataBase();
     db->connect("127.0.0.1", "root", "root", "test", 3306);
 
-
     WSADATA wsa_data;
     SOCKET server_fd, // 总服务器进程
         acpt_fd;      // 服务器与客户端之间通信进程
@@ -99,18 +98,37 @@ HttpServer::~HttpServer()
 string HttpServer::createHtmlResponse(string &data)
 {
     string response = "HTTP/1.1 200 OK\r\n"
-                  "Access-Control-Allow-Origin: *\r\n"
-                  "Content-Type: application/json; charset=UTF-8\r\n\r\n"
-                  "{\"message\":\"Hello, user!\"}";
+                      "Access-Control-Allow-Origin: *\r\n"
+                      "Content-Type: application/json; charset=UTF-8\r\n\r\n"
+                      "{\"message\":\"Hello, user!\"}";
+    return response;
+}
+
+
+string HttpServer::createJsonResponse(test_user *data)
+{
+    string response = "HTTP/1.1 200 OK\r\n"
+                      "Access-Control-Allow-Origin: *\r\n"
+                      "Content-Type: application/json; charset=UTF-8\r\n\r\n"
+                      "{";
+    for (auto it = data->data->begin(); it != data->data->end(); it++)
+    {
+        response += "\"" + it->first + "\"" + ":";
+        response += "\"" + it->second + "\"" + ",";
+    }
+    response.pop_back();
+    response += "}";
     return response;
 }
 
 int HttpServer::routeUser(SOCKET &accept_fd)
 {
     string data = "hhh";
-    string str = createHtmlResponse(data);
     // db->query("user");
-    test_user * tmp;
+    test_user *tmp;
     db->query("user", tmp);
+    string str = createJsonResponse(tmp);
+    SetConsoleOutputCP(CP_UTF8);
+    cout << str << endl;
     return send(accept_fd, str.c_str(), sizeof(char) * strlen(str.c_str()), 0);
 }

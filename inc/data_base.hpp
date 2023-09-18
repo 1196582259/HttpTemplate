@@ -12,7 +12,7 @@ using namespace std;
 struct test
 {
     int id;
-    map<string, string>* data;
+    map<string, string> *data;
 };
 
 struct test_user : test
@@ -172,7 +172,7 @@ inline bool DataBase::query(const char *table_name, struct test *table_data)
     int field_num = get_table_field(table_name);
     sprintf_s(_query, "select * from %s", table_name); // 拼接查询语句
     // 设置编码格式（SET NAMES GBK也行），否则cmd下中文乱码
-    mysql_query(_mysql, "set names gbk");
+    mysql_query(_mysql, "set names utf8");
     if (mysql_query(_mysql, _query)) // 执行SQL语句
     {
         printf("Query failed (%s)\n", mysql_error(_mysql));
@@ -190,7 +190,6 @@ inline bool DataBase::query(const char *table_name, struct test *table_data)
     for (int i = 0; i < field_num; i++) // 在已知字段数量的情况下获取字段名
     {
         str_field[i] = mysql_fetch_field(_res)->name;
-        cout << str_field[i] << endl;
     }
     table_data->data = new map<string, string>();
     // 打印获取的数据
@@ -199,11 +198,10 @@ inline bool DataBase::query(const char *table_name, struct test *table_data)
         for (int i = 0; i < field_num; i++)
         {
             // table_data->data[string(str_field[i])] = string(_column[i]);
-            table_data->data->insert(pair<string, string>("1223", "12321"));
-            cout << "```````````````````" << endl;
-            printf("%10s\t", _column[i]); // column是列数组
+            table_data->data->insert(pair<string, string>(string(str_field[i]), string(_column[i])));
+            // cout << "```````````````````" << endl;
+            // printf("%10s\t", _column[i]); // column是列数组
         }
-        printf("\n");
     }
 
     table_data->id = 2;
