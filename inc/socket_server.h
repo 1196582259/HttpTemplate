@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sstream>
 #include <string.h>
+#include <ctype.h>
 using namespace std;
 #include "data_base.hpp"
 #include "utils.h"

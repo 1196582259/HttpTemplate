@@ -114,7 +114,7 @@ string HttpServer::createJsonResponse(test_user *data)
     for (auto it = data->data->begin(); it != data->data->end(); it++)
     {
         response += "\"" + it->first + "\"" + ":";
-        response += "\"" + it->second + "\"" + ",";
+        response += jsonString(it->second) + ",";
     }
     response.pop_back();
     response += "}";

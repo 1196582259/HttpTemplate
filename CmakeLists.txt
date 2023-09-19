@@ -5,8 +5,8 @@ cmake_minimum_required (VERSION 3.5)
 # 项目信息
 project (HttpTemplate)
 
-set(MYSQL_DIR "E:/Program Files/MySQL/MySQL Server 5.7")
-# set(MYSQL_DIR "D:/tianxiaolong/software/mysql-8.1.0-winx64")
+# set(MYSQL_DIR "E:/Program Files/MySQL/MySQL Server 5.7")
+set(MYSQL_DIR "D:/tianxiaolong/software/mysql-8.1.0-winx64")
 include_directories("${MYSQL_DIR}/include")
 include_directories(inc)
 
@@ -30,5 +30,5 @@ target_link_libraries(server Ws2_32)
 target_link_libraries(main Ws2_32)
 target_link_libraries(main "${MYSQL_DIR}/lib/libmysql.lib")
 # 链接pthread动态库
-target_link_libraries(main "D:/C/mingw64/x86_64-w64-mingw32/lib/libpthread.dll.a")
-# target_link_libraries(main "D:/tianxiaolong/ENV/mingw64/x86_64-w64-mingw32/lib/libpthread.dll.a")
+# target_link_libraries(main "D:/C/mingw64/x86_64-w64-mingw32/lib/libpthread.dll.a")
+target_link_libraries(main "D:/tianxiaolong/ENV/mingw64/x86_64-w64-mingw32/lib/libpthread.dll.a")
