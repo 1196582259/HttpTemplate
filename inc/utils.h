@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -23,13 +26,14 @@ private:
     string error_msg;
 };
 
-inline bool isNumber(const string& str) {
+inline bool isNumber(const string &str)
+{
     istringstream iss(str);
     double value;
-    if(!(iss >> value)) return false; 
+    if (!(iss >> value))
+        return false;
     return true;
 }
-
 
 inline string jsonString(string &str)
 {
@@ -38,12 +42,16 @@ inline string jsonString(string &str)
         throw UtilsException("字符个数太少");
     }
 
-
-    if(isNumber(str)) {
+    string left = "{[",
+           right = "]}";
+    if (isNumber(str) || (left.find(str[0]) != left.npos && right.find(str[str.length() -1]) != right.npos))
+    {
         return str;
-    } else {
+    }
+    else
+    {
         return "\"" + str + "\"";
     }
-
-    return "123";
 }
+
+#endif

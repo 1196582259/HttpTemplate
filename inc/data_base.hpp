@@ -31,7 +31,8 @@ private:
     MYSQL_FIELD *_fields; // 字段列数组
     char _field[32][32];  // 存字段名二维数组
     MYSQL_RES *_res;
-    MYSQL_ROW _column;
+    MYSQL_ROW _db_data;
+    MYSQL_ROW _db_field_type;
     char _query[150];
 
 public:
@@ -54,7 +55,7 @@ inline DataBase::DataBase()
     _fields = nullptr;
     // memset(_field, NULL, sizeof(_field));
     _res = nullptr;
-    _column = nullptr;
+    _db_data = nullptr;
     // memset(_query, NULL, sizeof(_query));
 }
 inline bool DataBase::connect(const char *ip, const char *name, const char *cypher, const char *database_name, const int port)
@@ -151,11 +152,11 @@ inline bool DataBase::query(const char *table_name)
     }
     printf("\n");
     // 打印获取的数据
-    while (_column = mysql_fetch_row(_res)) // 在已知字段数量情况下，获取并打印下一行
+    while (_db_data = mysql_fetch_row(_res)) // 在已知字段数量情况下，获取并打印下一行
     {
         for (int i = 0; i < field; i++)
         {
-            printf("%10s\t", _column[i]); // column是列数组
+            printf("%10s\t", _db_data[i]); // column是列数组
         }
         printf("\n");
     }
@@ -193,14 +194,14 @@ inline bool DataBase::query(const char *table_name, struct test *table_data)
     }
     table_data->data = new map<string, string>();
     // 打印获取的数据
-    while (_column = mysql_fetch_row(_res)) // 在已知字段数量情况下，获取并打印下一行
+    while (_db_data = mysql_fetch_row(_res)) // 在已知字段数量情况下，获取并打印下一行
     {
         for (int i = 0; i < field_num; i++)
         {
-            // table_data->data[string(str_field[i])] = string(_column[i]);
-            table_data->data->insert(pair<string, string>(string(str_field[i]), string(_column[i])));
+            // table_data->data[string(str_field[i])] = string(_db_data[i]);
+            table_data->data->insert(pair<string, string>(string(str_field[i]), string(_db_data[i])));
             // cout << "```````````````````" << endl;
-            // printf("%10s\t", _column[i]); // column是列数组
+            // printf("%10s\t", _db_data[i]); // column是列数组
         }
     }
 
